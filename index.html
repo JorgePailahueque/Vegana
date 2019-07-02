@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <title>Brote Vegana</title>
+</head>
+
+<body>
+    <div id="app">
+        <v-toolbar dark extended>
+            <v-toolbar-side-icon></v-toolbar-side-icon>
+
+            <v-container grid-list-xl>
+                <v-layout align-center justify-center row fill-height>
+                    <v-flex>
+                        <v-img height="140px" width="140px"
+                            src="https://www.brotetienda.com/wp-content/uploads/2018/07/brote_final_original.png">
+                        </v-img>
+                    </v-flex>
+                    <v-flex>
+                        <v-toolbar-title class="white--text text-md-center">Inventario Productos</v-toolbar-title>
+                    </v-flex>
+                    <v-flex></v-flex>
+                </v-layout>
+            </v-container>
+            <v-spacer></v-spacer>
+
+            <v-btn icon>
+                <v-icon>search</v-icon>
+            </v-btn>
+
+            <v-btn icon>
+                <v-icon>refresh</v-icon>
+            </v-btn>
+
+            <v-btn icon>
+                <v-icon>more_vert</v-icon>
+            </v-btn>
+        </v-toolbar>
+        <v-layout justify-end class="mr-3" />
+        <v-dialog v-model="dialog" persistent max-width="600px">
+            <template v-slot:activator="{ on }">
+                <v-btn dark v-on="on">Agregar Producto</v-btn>
+            </template>
+            <v-card>
+                <v-card-title>
+                    <span class="headline"> {{ formTitle }} </span>
+                </v-card-title>
+                <v-form class="mx-1" ref="form" v-model="valid" lazy-validation>
+                    <v-container grid-list-md>
+                        <v-layout wrap>
+                            <v-flex xs12 sm6 md4>
+                                <v-text-field :rules="rules" type="number" v-model="product.codigo" label="Codigo"
+                                    required>
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm6 md4>
+                                <v-text-field :rules="rules" v-model="product.producto" label="Producto"></v-text-field>
+                            </v-flex>
+                            <v-flex xs12 sm6>
+                                <v-select :rules="rules" v-model="product.marca" :items="marcas" label="Marca" outline
+                                    required></v-select>
+                            </v-flex>
+                            <v-flex xs12 sm6>
+                                <v-autocomplete v-model="product.categoria" :items="categorias" label="Categoria"
+                                    multiple outline :rules="rules" required></v-autocomplete>
+                            </v-flex>
+                            <v-flex xs12>
+                                <v-text-field :rules="rules" type="number" v-model="product.stock" label="Stock"
+                                    required>
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex xs12>
+                                <v-text-field :rules="rules" type="number" v-model="product.precio" label="Precio"
+                                    required>
+                                </v-text-field>
+                            </v-flex>
+                            <v-flex>
+                            <v-text-field label="Seleccionar Imagen" @click='pickFile' v-model='product.img' prepend-icon='attach_file'></v-text-field>
+                                <input
+                                    type="file"
+                                    style="display: none"
+                                    ref="image"
+                                    accept="image/*"
+                                    @change="onFilePicked"
+                                >
+                            </v-flex>
+                        </v-layout>
+                    </v-container>
+                    <v-layout justify-end class="mr-3">
+                        <v-btn flat color="black" @click="close">Cancelar</v-btn>
+                        <v-btn :disabled="!valid" flat color="black" @click="validate">Guardar</v-btn>
+                    </v-layout>
+                </v-form>
+            </v-card>
+        </v-dialog>
+
+        </v-layout>
+        <v-data-table :headers="headers" :items="productos" class="elevation-1 mx-4" hide-actions>
+            <template v-slot:items="props">
+                <td class="text-xs-left">{{ props.item.codigo }}</td>
+                <td class="text-xs-left">{{ props.item.producto }}</td>
+                <td class="text-xs-left">{{ props.item.marca }}</td>
+                <td class="text-xs-left">{{ props.item.categoria }}</td>
+                <td class="text-xs-left">{{ props.item.stock }}</td>
+                <td class="text-xs-left">{{ props.item.precio }}</td>
+                <td class="text-xs-left">{{ props.item.img }}</td>
+                <td class="justify-center layout px-0">
+                    <v-icon small class="mr-1" @click="editItem(props.item)">
+                        edit
+                    </v-icon>
+                    <v-icon small @click="deleteItem(props.item)">
+                        delete
+                    </v-icon>
+                </td>
+            </template>
+        </v-data-table>
+    </div>
+
+    <script src="js/codigo.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+</body>
+
+</html>
